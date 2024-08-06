@@ -1,0 +1,31 @@
+replicaCount: 1
+
+serviceAccount:
+  create: true
+  name: external-dns
+
+sources:
+  - service
+  - ingress
+
+provider: google
+
+google:
+  project: mykubernetes-426310
+
+extraArgs:
+  - --google-project=mykubernetes-426310
+
+extraVolumes:
+  - name: gcp-credentials
+    secret:
+      secretName: external-dns-gcp-credentials
+
+extraVolumeMounts:
+  - name: gcp-credentials
+    mountPath: /etc/kubernetes/gcp
+    readOnly: true
+
+env:
+  - name: GOOGLE_APPLICATION_CREDENTIALS
+    value: /etc/kubernetes/gcp/key.json
